@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SuperKlitjeQuiz — Host 🐟</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    #host-app { max-width: 1200px; margin: 0 auto; }
+    .host-screen.active { align-items: stretch; }
+    .join-info {
+      text-align: center;
+      padding: 20px;
+      background: rgba(0,245,255,0.05);
+      border: 1px solid rgba(0,245,255,0.2);
+      border-radius: 20px;
+    }
+    .join-url {
+      font-size: 22px;
+      color: var(--cyan);
+      font-family: 'Fredoka One', cursive;
+      margin-top: 8px;
+    }
+    .lb-compact { max-height: 340px; overflow-y: auto; }
+    .correct-label {
+      font-family: 'Fredoka One', cursive;
+      font-size: 28px;
+      color: var(--green);
+      text-align: center;
+      text-shadow: 0 0 20px rgba(0,255,136,0.6);
+      animation: feedbackIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275);
+    }
+    .host-question-text {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(28px, 4vw, 56px);
+      text-align: center;
+      color: #fff;
+      text-shadow: 0 0 30px rgba(0,245,255,0.4);
+      line-height: 1.25;
+      padding: 0 10px;
+    }
+    .stats-row {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .stat-pill {
+      padding: 10px 24px;
+      border-radius: 50px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.1);
+      font-size: 18px;
+      font-family: 'Fredoka One', cursive;
+      color: var(--cyan);
+    }
+  </style>
+</head>
+<body>
+  <canvas id="bubble-canvas"></canvas>
+  <div id="host-app">
+
+    <!-- WELCOME SCREEN -->
+    <div id="hscreen-welcome" class="host-screen active" style="min-height:100vh;justify-content:center;align-items:center;gap:28px;">
+      <div class="logo">🐟 SuperKlitjeQuiz</div>
+      <img src="picture.jpg" alt="De man zelf"
+           style="width:260px;height:260px;border-radius:50%;object-fit:cover;
+                  border:6px solid var(--cyan);box-shadow:0 0 60px rgba(0,245,255,0.5),0 0 120px rgba(255,45,155,0.3);
+                  animation:logoPulse 3s ease-in-out infinite;">
+      <p class="logo-sub" style="letter-spacing:6px;">DE VRIJGEZELLEN QUIZ</p>
+      <div>
+        <button class="btn btn-host" onclick="createGame()" style="min-width:280px;">
+          NIEUW SPEL STARTEN 🎣
+        </button>
+      </div>
+    </div>
+
+    <!-- LOBBY SCREEN -->
+    <div id="hscreen-lobby" class="host-screen" style="min-height:100vh;justify-content:center;align-items:center;gap:24px;">
+      <div class="logo" style="font-size:clamp(36px,5vw,60px);">🐟 SuperKlitjeQuiz</div>
+      <div class="join-info" style="width:100%;max-width:600px;">
+        <p style="font-size:20px;color:rgba(255,255,255,0.7);letter-spacing:2px;">SPEEL OP JE TELEFOON</p>
+        <div class="join-url" id="host-join-url"></div>
+      </div>
+      <div class="card" style="width:100%;max-width:600px;">
+        <p style="text-align:center;font-size:18px;color:var(--cyan);margin-bottom:14px;">
+          SPELERS (<span id="host-player-count">0</span>)
+        </p>
+        <div class="player-grid" id="host-player-grid"></div>
+      </div>
+      <button class="btn btn-start" id="start-btn" onclick="startGame()" style="max-width:320px;">
+        START HET SPEL 🚀
+      </button>
+    </div>
+
+    <!-- QUESTION SCREEN -->
+    <div id="hscreen-question" class="host-screen" style="min-height:100vh;justify-content:center;padding:30px 20px;">
+      <div class="stats-row" id="host-stats-row">
+        <div class="stat-pill" id="host-q-num"></div>
+        <div class="stat-pill">Spelers: <span id="host-player-num"></span></div>
+        <div class="stat-pill">Geantwoord: <span id="host-answered">0</span>/<span id="host-total-players">0</span></div>
+      </div>
+
+      <div style="position:relative;display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap;">
+        <div class="timer-ring" style="width:110px;height:110px;">
+          <svg width="110" height="110" viewBox="0 0 110 110">
+            <circle class="track" cx="55" cy="55" r="45"/>
+            <circle class="progress" id="host-timer-arc" cx="55" cy="55" r="45" style="stroke-dasharray:283;"/>
+          </svg>
+          <div class="timer-number" id="host-timer-num" style="font-size:40px;">20</div>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:28px;width:100%;max-width:1000px;flex-wrap:wrap;justify-content:center;">
+        <img id="host-question-photo" src="" alt=""
+             style="width:220px;height:220px;object-fit:cover;border-radius:20px;
+                    border:4px solid var(--cyan);box-shadow:0 0 30px rgba(0,245,255,0.4);
+                    display:none;flex-shrink:0;">
+        <div class="host-question-text" id="host-question-text" style="flex:1;min-width:260px;"></div>
+      </div>
+
+      <div class="answer-progress" style="max-width:600px;width:100%;">
+        <div class="answer-progress-bar" id="host-progress-bar" style="width:0%"></div>
+      </div>
+
+      <div class="host-answers-grid" id="host-answers-grid" style="max-width:900px;width:100%;"></div>
+    </div>
+
+    <!-- REVEAL SCREEN -->
+    <div id="hscreen-reveal" class="host-screen" style="min-height:100vh;justify-content:center;padding:30px 20px;">
+      <div class="correct-label" id="reveal-correct-label"></div>
+      <div style="display:flex;align-items:flex-start;gap:24px;width:100%;max-width:900px;flex-wrap:wrap;justify-content:center;">
+        <img id="reveal-photo" src="" alt=""
+             style="width:180px;height:180px;object-fit:cover;border-radius:16px;
+                    border:4px solid var(--green);box-shadow:0 0 25px rgba(0,255,136,0.4);
+                    display:none;flex-shrink:0;">
+        <div class="host-answers-grid" id="reveal-answers-grid" style="flex:1;min-width:260px;"></div>
+      </div>
+      <div class="leaderboard lb-compact" id="reveal-leaderboard" style="max-width:700px;width:100%;"></div>
+      <button class="btn btn-next" onclick="nextQuestion()" id="next-btn" style="max-width:340px;margin-top:10px;">
+        VOLGENDE VRAAG ➡️
+      </button>
+    </div>
+
+    <!-- END SCREEN -->
+    <div id="hscreen-end" class="host-screen" style="min-height:100vh;justify-content:center;padding:30px 20px;align-items:center;">
+      <div class="logo">🏆 Einde!</div>
+      <div class="podium" id="host-podium" style="max-width:600px;width:100%;"></div>
+      <div class="leaderboard" id="host-end-leaderboard" style="max-width:700px;width:100%;"></div>
+      <button class="btn btn-host" onclick="location.reload()" style="max-width:280px;margin-top:20px;">
+        NIEUW SPEL 🔄
+      </button>
+    </div>
+
+  </div>
+
+  <script src="host.js"></script>
+</body>
+</html>

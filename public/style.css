@@ -1,0 +1,627 @@
+/* ── Google Font ─────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap');
+
+/* ── Variables ───────────────────────────────────────────────────────── */
+:root {
+  --bg: #070d1a;
+  --ocean1: #0a1628;
+  --ocean2: #0d1f3c;
+  --cyan: #00f5ff;
+  --blue: #0099ff;
+  --pink: #ff2d9b;
+  --purple: #9b2dff;
+  --yellow: #ffe600;
+  --green: #00ff88;
+  --red: #ff3c3c;
+  --text: #e8f4ff;
+  --card: rgba(255,255,255,0.06);
+  --card-border: rgba(0,245,255,0.2);
+
+  /* answer colors */
+  --ans-a: #e83030;
+  --ans-b: #1a9fff;
+  --ans-c: #f0c40b;
+  --ans-d: #2dcb75;
+}
+
+/* ── Reset ───────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+h1, h2, h3, .display-font {
+  font-family: 'Fredoka One', cursive;
+}
+
+/* ── Ocean background gradient ───────────────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 80%, rgba(0,100,255,0.15) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(0,200,255,0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(0,30,80,0.8) 0%, transparent 80%),
+    linear-gradient(180deg, #070d1a 0%, #0a1628 50%, #0d1f3c 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Bubble canvas (background) ──────────────────────────────────────── */
+#bubble-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── Fish lane ───────────────────────────────────────────────────────── */
+.fish-lane {
+  position: fixed;
+  left: -120px;
+  pointer-events: none;
+  z-index: 2;
+  font-size: clamp(24px, 4vw, 48px);
+  animation: swimAcross linear infinite;
+  white-space: nowrap;
+  text-shadow: 0 0 20px rgba(0,245,255,0.6);
+}
+@keyframes swimAcross {
+  0%   { transform: translateX(0) scaleX(1); opacity: 0; }
+  5%   { opacity: 1; }
+  95%  { opacity: 1; }
+  100% { transform: translateX(calc(100vw + 240px)) scaleX(1); opacity: 0; }
+}
+.fish-lane.reverse {
+  left: auto;
+  right: -120px;
+  animation-name: swimReverse;
+}
+@keyframes swimReverse {
+  0%   { transform: translateX(0) scaleX(-1); opacity: 0; }
+  5%   { opacity: 1; }
+  95%  { opacity: 1; }
+  100% { transform: translateX(calc(-100vw - 240px)) scaleX(-1); opacity: 0; }
+}
+
+/* ── Main containers ─────────────────────────────────────────────────── */
+#app, #host-app {
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* ── Screens ─────────────────────────────────────────────────────────── */
+.screen { display: none; width: 100%; max-width: 500px; }
+.screen.active { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+.host-screen { display: none; width: 100%; max-width: 900px; }
+.host-screen.active { display: flex; flex-direction: column; align-items: center; gap: 24px; }
+
+/* ── Logo ────────────────────────────────────────────────────────────── */
+.logo {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(48px, 10vw, 96px);
+  background: linear-gradient(135deg, var(--cyan), var(--blue), var(--pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: none;
+  animation: logoPulse 3s ease-in-out infinite;
+  letter-spacing: 2px;
+  text-align: center;
+}
+@keyframes logoPulse {
+  0%, 100% { filter: drop-shadow(0 0 20px rgba(0,245,255,0.5)); }
+  50% { filter: drop-shadow(0 0 40px rgba(255,45,155,0.7)); }
+}
+
+.logo-sub {
+  font-size: clamp(14px, 3vw, 18px);
+  color: var(--cyan);
+  opacity: 0.8;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-top: -10px;
+}
+
+/* ── Cards ───────────────────────────────────────────────────────────── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 20px;
+  padding: 28px 32px;
+  width: 100%;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+/* ── Inputs ──────────────────────────────────────────────────────────── */
+input[type="text"], input[type="number"] {
+  width: 100%;
+  padding: 16px 20px;
+  border-radius: 14px;
+  border: 2px solid var(--card-border);
+  background: rgba(255,255,255,0.05);
+  color: var(--text);
+  font-size: 20px;
+  font-family: 'Fredoka One', cursive;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  letter-spacing: 3px;
+  text-align: center;
+}
+input[type="text"]:focus, input[type="number"]:focus {
+  border-color: var(--cyan);
+  box-shadow: 0 0 20px rgba(0,245,255,0.3);
+}
+input::placeholder { color: rgba(255,255,255,0.3); letter-spacing: 1px; }
+
+/* ── Buttons ─────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 36px;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  font-family: 'Fredoka One', cursive;
+  font-size: 22px;
+  transition: transform 0.15s, box-shadow 0.15s;
+  animation: wobble 4s ease-in-out infinite;
+  width: 100%;
+  letter-spacing: 1px;
+}
+.btn:hover { transform: scale(1.05) translateY(-2px); }
+.btn:active { transform: scale(0.97); }
+@keyframes wobble {
+  0%, 100% { border-radius: 50px; }
+  25% { border-radius: 40px 60px 50px 55px; }
+  50% { border-radius: 55px 45px 60px 40px; }
+  75% { border-radius: 45px 55px 40px 60px; }
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--cyan), var(--blue));
+  color: #000;
+  box-shadow: 0 4px 20px rgba(0,245,255,0.4);
+}
+.btn-primary:hover { box-shadow: 0 8px 30px rgba(0,245,255,0.6); }
+
+.btn-host {
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  color: #fff;
+  box-shadow: 0 4px 20px rgba(255,45,155,0.4);
+  font-size: 26px;
+  padding: 20px 48px;
+}
+.btn-host:hover { box-shadow: 0 8px 30px rgba(255,45,155,0.7); }
+
+.btn-start {
+  background: linear-gradient(135deg, var(--green), var(--cyan));
+  color: #000;
+  box-shadow: 0 4px 20px rgba(0,255,136,0.4);
+  font-size: 28px;
+  padding: 20px 48px;
+}
+
+.btn-next {
+  background: linear-gradient(135deg, var(--yellow), var(--pink));
+  color: #000;
+  box-shadow: 0 4px 20px rgba(255,230,0,0.4);
+  font-size: 28px;
+  padding: 20px 48px;
+}
+
+/* ── Room code display ───────────────────────────────────────────────── */
+.room-code {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(64px, 15vw, 120px);
+  background: linear-gradient(135deg, var(--yellow), var(--pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 12px;
+  animation: codePulse 2s ease-in-out infinite;
+  text-align: center;
+}
+@keyframes codePulse {
+  0%, 100% { filter: drop-shadow(0 0 15px rgba(255,230,0,0.6)); }
+  50% { filter: drop-shadow(0 0 35px rgba(255,45,155,0.8)); }
+}
+
+/* ── Player list ─────────────────────────────────────────────────────── */
+.player-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  max-height: 240px;
+  overflow-y: auto;
+}
+.player-chip {
+  background: linear-gradient(135deg, rgba(0,245,255,0.15), rgba(0,153,255,0.1));
+  border: 1px solid rgba(0,245,255,0.3);
+  border-radius: 50px;
+  padding: 8px 18px;
+  font-size: 16px;
+  animation: chipIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@keyframes chipIn {
+  from { transform: scale(0) rotate(-10deg); opacity: 0; }
+  to   { transform: scale(1) rotate(0deg);  opacity: 1; }
+}
+
+/* ── Question display ────────────────────────────────────────────────── */
+.question-text {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(22px, 4vw, 42px);
+  text-align: center;
+  line-height: 1.3;
+  color: #fff;
+  text-shadow: 0 0 30px rgba(0,245,255,0.4);
+  padding: 0 16px;
+}
+
+.question-number {
+  font-size: 16px;
+  color: var(--cyan);
+  opacity: 0.8;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+/* ── Timer ───────────────────────────────────────────────────────────── */
+.timer-ring {
+  position: relative;
+  width: 90px;
+  height: 90px;
+}
+.timer-ring svg { transform: rotate(-90deg); }
+.timer-ring .track { fill: none; stroke: rgba(255,255,255,0.1); stroke-width: 8; }
+.timer-ring .progress {
+  fill: none;
+  stroke: var(--cyan);
+  stroke-width: 8;
+  stroke-linecap: round;
+  stroke-dasharray: 220;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1s linear, stroke 1s;
+}
+.timer-number {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Fredoka One', cursive;
+  font-size: 32px;
+  color: var(--cyan);
+}
+
+/* ── Answer buttons ──────────────────────────────────────────────────── */
+.answers-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  width: 100%;
+}
+.answer-btn {
+  padding: 20px 16px;
+  border-radius: 18px;
+  border: none;
+  cursor: pointer;
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(16px, 2.5vw, 24px);
+  color: #fff;
+  text-align: center;
+  transition: transform 0.15s, box-shadow 0.15s, filter 0.3s;
+  animation: answerWobble 5s ease-in-out infinite;
+  position: relative;
+  overflow: hidden;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  line-height: 1.2;
+  word-break: break-word;
+  hyphens: auto;
+}
+.answer-btn:not(:disabled):hover {
+  transform: scale(1.04) translateY(-3px);
+  filter: brightness(1.15);
+}
+.answer-btn:not(:disabled):active { transform: scale(0.97); }
+.answer-btn:disabled { cursor: default; }
+@keyframes answerWobble {
+  0%, 100% { border-radius: 18px; }
+  33%  { border-radius: 14px 22px 16px 20px; }
+  66%  { border-radius: 22px 14px 20px 16px; }
+}
+
+.answer-btn.a { background: linear-gradient(135deg, #c0392b, var(--ans-a)); box-shadow: 0 4px 20px rgba(232,48,48,0.4); }
+.answer-btn.b { background: linear-gradient(135deg, #1565c0, var(--ans-b)); box-shadow: 0 4px 20px rgba(26,159,255,0.4); }
+.answer-btn.c { background: linear-gradient(135deg, #b7950b, var(--ans-c)); box-shadow: 0 4px 20px rgba(240,196,11,0.4); }
+.answer-btn.d { background: linear-gradient(135deg, #1a7a4a, var(--ans-d)); box-shadow: 0 4px 20px rgba(45,203,117,0.4); }
+
+.answer-btn .letter {
+  font-size: 1.3em;
+  opacity: 0.9;
+  flex-shrink: 0;
+}
+.answer-btn .fish-icon {
+  font-size: 1.5em;
+  flex-shrink: 0;
+}
+
+/* Correct/wrong reveal states */
+.answer-btn.correct { animation: correctFlash 0.8s ease-out forwards; }
+.answer-btn.wrong   { filter: brightness(0.35) saturate(0.3); transform: scale(0.95); }
+
+@keyframes correctFlash {
+  0%   { transform: scale(1);    box-shadow: 0 0 0 0 rgba(0,255,136,0.8); }
+  30%  { transform: scale(1.08); box-shadow: 0 0 0 20px rgba(0,255,136,0); }
+  60%  { transform: scale(0.97); }
+  100% { transform: scale(1);    filter: brightness(1.3) saturate(1.5); }
+}
+
+/* ── Answer feedback (player) ────────────────────────────────────────── */
+.answer-feedback {
+  text-align: center;
+  padding: 24px;
+  animation: feedbackIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@keyframes feedbackIn {
+  from { transform: scale(0.5) rotate(-10deg); opacity: 0; }
+  to   { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+.feedback-icon { font-size: 72px; margin-bottom: 12px; }
+.feedback-points {
+  font-family: 'Fredoka One', cursive;
+  font-size: 48px;
+  color: var(--green);
+  text-shadow: 0 0 20px rgba(0,255,136,0.6);
+}
+.feedback-score {
+  font-size: 20px;
+  color: var(--cyan);
+  margin-top: 8px;
+}
+
+/* ── Progress bar (how many answered) ───────────────────────────────── */
+.answer-progress {
+  width: 100%;
+  background: rgba(255,255,255,0.1);
+  border-radius: 50px;
+  height: 10px;
+  overflow: hidden;
+}
+.answer-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--cyan), var(--blue));
+  border-radius: 50px;
+  transition: width 0.4s ease;
+  box-shadow: 0 0 10px var(--cyan);
+}
+
+/* ── Leaderboard ─────────────────────────────────────────────────────── */
+.leaderboard {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.lb-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 20px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  animation: lbSlide 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+  transition: background 0.3s;
+}
+.lb-row:nth-child(1) { background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,150,0,0.1)); border-color: rgba(255,215,0,0.4); }
+.lb-row:nth-child(2) { background: linear-gradient(135deg, rgba(200,200,200,0.2), rgba(150,150,150,0.1)); border-color: rgba(200,200,200,0.3); }
+.lb-row:nth-child(3) { background: linear-gradient(135deg, rgba(180,100,20,0.2), rgba(140,80,10,0.1)); border-color: rgba(180,100,20,0.3); }
+@keyframes lbSlide {
+  from { transform: translateX(-30px); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+.lb-rank {
+  font-family: 'Fredoka One', cursive;
+  font-size: 22px;
+  min-width: 40px;
+  text-align: center;
+  color: var(--yellow);
+}
+.lb-fish { font-size: 20px; }
+.lb-name { flex: 1; font-size: 20px; font-weight: 700; }
+.lb-score {
+  font-family: 'Fredoka One', cursive;
+  font-size: 22px;
+  color: var(--cyan);
+  min-width: 80px;
+  text-align: right;
+}
+
+/* ── Podium ──────────────────────────────────────────────────────────── */
+.podium {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+  margin: 20px 0;
+}
+.podium-place {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.podium-avatar {
+  font-size: 40px;
+  animation: podiumBounce 1.5s ease-in-out infinite;
+}
+@keyframes podiumBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+.podium-name {
+  font-family: 'Fredoka One', cursive;
+  font-size: 18px;
+  text-align: center;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.podium-score {
+  font-size: 14px;
+  color: var(--cyan);
+}
+.podium-block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px 12px 0 0;
+  font-family: 'Fredoka One', cursive;
+  font-size: 28px;
+  color: #000;
+  min-width: 90px;
+}
+.podium-block.first  { height: 120px; background: linear-gradient(180deg, #ffd700, #ffa500); }
+.podium-block.second { height: 90px;  background: linear-gradient(180deg, #c0c0c0, #a0a0a0); }
+.podium-block.third  { height: 65px;  background: linear-gradient(180deg, #cd7f32, #8b4513); }
+
+/* ── Waiting screen ──────────────────────────────────────────────────── */
+.waiting-pulse {
+  font-size: 64px;
+  animation: waitPulse 1.5s ease-in-out infinite;
+}
+@keyframes waitPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.2); opacity: 0.7; }
+}
+
+/* ── Status texts ────────────────────────────────────────────────────── */
+.status-text {
+  font-size: 18px;
+  color: rgba(255,255,255,0.6);
+  text-align: center;
+}
+.highlight { color: var(--cyan); font-weight: 700; }
+.big-stat {
+  font-family: 'Fredoka One', cursive;
+  font-size: 72px;
+  color: var(--yellow);
+  text-shadow: 0 0 30px rgba(255,230,0,0.5);
+}
+
+/* ── Fish explosion particles ────────────────────────────────────────── */
+.particle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 999;
+  font-size: 28px;
+  animation: particleFly 1.2s ease-out forwards;
+}
+@keyframes particleFly {
+  0%   { transform: translate(0,0) scale(1) rotate(0deg);   opacity: 1; }
+  100% { transform: var(--tx) scale(0) rotate(var(--rot)); opacity: 0; }
+}
+
+/* ── Error message ───────────────────────────────────────────────────── */
+.error-msg {
+  color: var(--red);
+  font-size: 16px;
+  text-align: center;
+  min-height: 22px;
+  animation: shake 0.4s ease;
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
+
+/* ── Host-specific ───────────────────────────────────────────────────── */
+.host-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.host-question-layout {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.host-answers-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  width: 100%;
+}
+.host-answer-card {
+  padding: 20px;
+  border-radius: 18px;
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(18px, 2vw, 26px);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 80px;
+  line-height: 1.2;
+  word-break: break-word;
+}
+.host-answer-card.a { background: linear-gradient(135deg, #c0392b, var(--ans-a)); }
+.host-answer-card.b { background: linear-gradient(135deg, #1565c0, var(--ans-b)); }
+.host-answer-card.c { background: linear-gradient(135deg, #b7950b, var(--ans-c)); }
+.host-answer-card.d { background: linear-gradient(135deg, #1a7a4a, var(--ans-d)); }
+.host-answer-card.correct { animation: correctFlash 0.8s ease-out forwards; filter: brightness(1.3); }
+.host-answer-card.wrong   { filter: brightness(0.3) saturate(0.2); }
+
+/* ── Scrollbar ───────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(0,245,255,0.3); border-radius: 3px; }
+
+/* ── Utility ─────────────────────────────────────────────────────────── */
+.text-center { text-align: center; }
+.w-full { width: 100%; }
+.mt-8 { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.gap-12 { gap: 12px; }
+.flex-row { display: flex; flex-direction: row; align-items: center; gap: 12px; }
+
+/* ── Mobile tweaks ───────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .card { padding: 20px; }
+  .answers-grid { gap: 10px; }
+  .answer-btn { font-size: 15px; padding: 16px 10px; min-height: 70px; }
+  .room-code { font-size: 64px; letter-spacing: 8px; }
+}

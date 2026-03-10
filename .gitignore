@@ -1,0 +1,7 @@
+node_modules/
+*.pptx
+picture.enc
+/foto/
+.claude/
+*.log
+.DS_Store

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>SuperKlitjeQuiz 🐟</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <canvas id="bubble-canvas"></canvas>
+  <div id="app">
+
+    <!-- JOIN SCREEN -->
+    <div id="screen-join" class="screen active">
+      <div class="logo" style="font-size:clamp(32px,8vw,64px);">🐟 SuperKlitjeQuiz</div>
+      <img src="picture.jpg" alt="De man zelf"
+           style="width:160px;height:160px;border-radius:50%;object-fit:cover;
+                  border:4px solid var(--cyan);box-shadow:0 0 30px rgba(0,245,255,0.5);
+                  animation:logoPulse 3s ease-in-out infinite;">
+
+      <div class="card" style="display:flex;flex-direction:column;gap:16px;">
+        <input id="nickname-input" type="text" placeholder="Jouw naam" maxlength="20"
+               autocomplete="off">
+        <div id="join-error" class="error-msg"></div>
+        <button class="btn btn-primary" onclick="joinGame()">MEEDOEN 🦈</button>
+      </div>
+    </div>
+
+    <!-- LOBBY SCREEN -->
+    <div id="screen-lobby" class="screen">
+      <div class="logo" style="font-size:48px;">🐡 Wachten…</div>
+      <div class="card text-center">
+        <div class="waiting-pulse">🎣</div>
+        <p class="status-text mt-8">Wacht op de host om te starten</p>
+        <p class="status-text mt-8">Jij speelt als: <span class="highlight" id="lobby-name"></span></p>
+      </div>
+    </div>
+
+    <!-- QUESTION SCREEN -->
+    <div id="screen-question" class="screen">
+      <div class="flex-row w-full" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
+        <span id="q-number" class="question-number"></span>
+        <img id="player-question-photo" src="" alt=""
+             style="width:64px;height:64px;object-fit:cover;border-radius:10px;
+                    border:2px solid var(--cyan);display:none;">
+        <div class="timer-ring" id="timer-ring">
+          <svg width="90" height="90" viewBox="0 0 90 90">
+            <circle class="track" cx="45" cy="45" r="35"/>
+            <circle class="progress" id="timer-arc" cx="45" cy="45" r="35"/>
+          </svg>
+          <div class="timer-number" id="timer-num">20</div>
+        </div>
+      </div>
+      <div class="answers-grid" id="answers-grid"></div>
+    </div>
+
+    <!-- ANSWER WAIT SCREEN -->
+    <div id="screen-answer-wait" class="screen">
+      <div class="answer-feedback" id="answer-feedback-box"></div>
+    </div>
+
+    <!-- LEADERBOARD SCREEN -->
+    <div id="screen-leaderboard" class="screen">
+      <div class="logo" style="font-size:40px;">🏆 Scores</div>
+      <div class="leaderboard" id="leaderboard-list"></div>
+      <p class="status-text">Wacht op de host voor de volgende vraag…</p>
+    </div>
+
+    <!-- GAME END SCREEN -->
+    <div id="screen-end" class="screen">
+      <div class="logo">🎉 Einde!</div>
+      <div class="podium" id="podium-display"></div>
+      <div class="card w-full">
+        <div class="leaderboard" id="end-leaderboard"></div>
+      </div>
+    </div>
+
+    <!-- DISCONNECTED SCREEN -->
+    <div id="screen-disconnected" class="screen">
+      <div class="logo" style="font-size:48px;">💀 Verbinding</div>
+      <div class="card text-center">
+        <p class="status-text">Je bent losgekoppeld. Herlaad de pagina om opnieuw mee te doen.</p>
+        <button class="btn btn-primary mt-16" onclick="location.reload()">Opnieuw 🔄</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="player.js"></script>
+</body>
+</html>
