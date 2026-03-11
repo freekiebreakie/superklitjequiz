@@ -26,13 +26,15 @@
 
 /* ── Reset ───────────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+* { -webkit-tap-highlight-color: transparent; }
 
 body {
   font-family: 'Nunito', sans-serif;
   background: var(--bg);
   color: var(--text);
-  min-height: 100vh;
+  min-height: 100dvh;
   overflow-x: hidden;
+  overscroll-behavior-y: none;
   position: relative;
 }
 
@@ -95,12 +97,12 @@ body::before {
 #app, #host-app {
   position: relative;
   z-index: 10;
-  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: max(20px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
 }
 
 /* ── Screens ─────────────────────────────────────────────────────────── */
@@ -184,6 +186,8 @@ input::placeholder { color: rgba(255,255,255,0.3); letter-spacing: 1px; }
   animation: wobble 4s ease-in-out infinite;
   width: 100%;
   letter-spacing: 1px;
+  touch-action: manipulation;
+  user-select: none;
 }
 .btn:hover { transform: scale(1.05) translateY(-2px); }
 .btn:active { transform: scale(0.97); }
@@ -320,26 +324,28 @@ input::placeholder { color: rgba(255,255,255,0.3); letter-spacing: 1px; }
   width: 100%;
 }
 .answer-btn {
-  padding: 20px 16px;
+  padding: 16px 14px;
   border-radius: 18px;
   border: none;
   cursor: pointer;
   font-family: 'Fredoka One', cursive;
-  font-size: clamp(16px, 2.5vw, 24px);
+  font-size: clamp(15px, 2.5vw, 22px);
   color: #fff;
-  text-align: center;
+  text-align: left;
   transition: transform 0.15s, box-shadow 0.15s, filter 0.3s;
   animation: answerWobble 5s ease-in-out infinite;
   position: relative;
   overflow: hidden;
-  min-height: 80px;
+  min-height: 72px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 8px;
-  line-height: 1.2;
+  line-height: 1.25;
   word-break: break-word;
   hyphens: auto;
+  touch-action: manipulation;
+  user-select: none;
 }
 .answer-btn:not(:disabled):hover {
   transform: scale(1.04) translateY(-3px);
@@ -618,10 +624,51 @@ input::placeholder { color: rgba(255,255,255,0.3); letter-spacing: 1px; }
 .gap-12 { gap: 12px; }
 .flex-row { display: flex; flex-direction: row; align-items: center; gap: 12px; }
 
+/* ── Player question text ─────────────────────────────────────────────── */
+.player-question-text {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(16px, 4vw, 22px);
+  text-align: center;
+  color: #fff;
+  line-height: 1.35;
+  text-shadow: 0 0 20px rgba(0,245,255,0.3);
+  padding: 0 4px;
+  width: 100%;
+}
+
 /* ── Mobile tweaks ───────────────────────────────────────────────────── */
-@media (max-width: 480px) {
+@media (max-width: 520px) {
   .card { padding: 20px; }
-  .answers-grid { gap: 10px; }
-  .answer-btn { font-size: 15px; padding: 16px 10px; min-height: 70px; }
+
+  /* 1-column answers on mobile so long text fits */
+  .answers-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .answer-btn {
+    font-size: 15px;
+    padding: 14px 14px;
+    min-height: 58px;
+    text-align: left;
+  }
+
   .room-code { font-size: 64px; letter-spacing: 8px; }
+
+  /* Compact leaderboard rows on mobile */
+  .lb-row { padding: 10px 14px; gap: 10px; }
+  .lb-name { font-size: 17px; }
+  .lb-score { font-size: 17px; min-width: 60px; }
+  .lb-fish { display: none; }
+
+  /* Podium compact */
+  .podium-block.first  { height: 90px; }
+  .podium-block.second { height: 70px; }
+  .podium-block.third  { height: 52px; }
+  .podium-name { font-size: 15px; max-width: 90px; }
+}
+
+/* Disable hover effects on touch devices (prevents sticky states) */
+@media (hover: none) {
+  .btn:hover { transform: none; box-shadow: revert; }
+  .answer-btn:not(:disabled):hover { transform: none; filter: none; }
 }

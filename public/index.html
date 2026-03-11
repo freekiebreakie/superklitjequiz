@@ -2,7 +2,7 @@
 <html lang="nl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>SuperKlitjeQuiz 🐟</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -38,19 +38,17 @@
 
     <!-- QUESTION SCREEN -->
     <div id="screen-question" class="screen">
-      <div class="flex-row w-full" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
+      <div class="flex-row w-full" style="justify-content:space-between;align-items:center;gap:8px;">
         <span id="q-number" class="question-number"></span>
-        <img id="player-question-photo" src="" alt=""
-             style="width:64px;height:64px;object-fit:cover;border-radius:10px;
-                    border:2px solid var(--cyan);display:none;">
         <div class="timer-ring" id="timer-ring">
-          <svg width="90" height="90" viewBox="0 0 90 90">
+          <svg width="72" height="72" viewBox="0 0 90 90">
             <circle class="track" cx="45" cy="45" r="35"/>
             <circle class="progress" id="timer-arc" cx="45" cy="45" r="35"/>
           </svg>
-          <div class="timer-number" id="timer-num">20</div>
+          <div class="timer-number" id="timer-num" style="font-size:26px;">20</div>
         </div>
       </div>
+      <div id="player-question-text" class="player-question-text" style="display:none;"></div>
       <div class="answers-grid" id="answers-grid"></div>
     </div>
 

@@ -268,6 +268,9 @@ function handleMessage(msg) {
       const correctIdx = msg.correctIndex;
       const correctText = currentAnswers[correctIdx] || "";
       const letters = ["A", "B", "C", "D"];
+      const voteCounts = msg.voteCounts || [];
+      const maxVotes = Math.max(1, ...voteCounts);
+      const totalVotes = voteCounts.reduce((s, v) => s + v, 0);
 
       // Reveal on question screen answer cards
       currentAnswers.forEach((_, i) => {
@@ -290,13 +293,24 @@ function handleMessage(msg) {
       }
 
       const classes = ["a", "b", "c", "d"];
-      document.getElementById("reveal-answers-grid").innerHTML = currentAnswers.map((ans, i) => `
-        <div class="host-answer-card ${classes[i]} ${i === correctIdx ? "correct" : "wrong"}">
-          <span style="font-size:1.4em;">${ANSWER_FISH[i]}</span>
-          <span style="font-size:1.1em;opacity:0.9;">${letters[i]}.</span>
-          <span>${escHtml(ans)}</span>
-        </div>
-      `).join("");
+      document.getElementById("reveal-answers-grid").innerHTML = currentAnswers.map((ans, i) => {
+        const votes = voteCounts[i] || 0;
+        const pct = Math.round((votes / maxVotes) * 100);
+        const votePct = totalVotes > 0 ? Math.round((votes / totalVotes) * 100) : 0;
+        return `
+          <div class="host-answer-card ${classes[i]} ${i === correctIdx ? "correct" : "wrong"}" style="flex-direction:column;align-items:stretch;gap:6px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="font-size:1.4em;">${ANSWER_FISH[i]}</span>
+              <span style="font-size:1.1em;opacity:0.9;">${letters[i]}.</span>
+              <span style="flex:1;">${escHtml(ans)}</span>
+              <span style="font-family:'Fredoka One',cursive;font-size:1.1em;white-space:nowrap;">${votes} stem${votes !== 1 ? "men" : ""} (${votePct}%)</span>
+            </div>
+            <div style="background:rgba(0,0,0,0.3);border-radius:6px;height:10px;overflow:hidden;">
+              <div style="height:100%;border-radius:6px;width:${pct}%;background:${i === correctIdx ? "var(--green)" : "rgba(255,255,255,0.4)"};transition:width 0.6s ease;"></div>
+            </div>
+          </div>
+        `;
+      }).join("");
 
       buildLeaderboard(msg.leaderboard, "reveal-leaderboard");
 

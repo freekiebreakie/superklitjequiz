@@ -262,13 +262,13 @@ function renderQuestion(msg) {
   const letters = ["A", "B", "C", "D"];
   const classes = ["a", "b", "c", "d"];
 
-  // Photo (small, top bar)
-  const pPhoto = document.getElementById("player-question-photo");
-  if (msg.photo) {
-    pPhoto.src = msg.photo;
-    pPhoto.style.display = "block";
+  // Question text
+  const qText = document.getElementById("player-question-text");
+  if (msg.question) {
+    qText.textContent = msg.question;
+    qText.style.display = "block";
   } else {
-    pPhoto.style.display = "none";
+    qText.style.display = "none";
   }
 
   grid.innerHTML = "";

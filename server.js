@@ -55,6 +55,7 @@ function startQuestionTimer() {
     type: "questionStart",
     questionIndex: game.questionIndex,
     total: questions.length,
+    question: q.question,
     answers: q.answers,
     photo: q.photo || null,
     timeLimit: QUESTION_TIME,
@@ -77,11 +78,19 @@ function revealAnswer() {
   for (const player of game.players.values()) {
     if (!game.answerMap.has(player.nickname)) player.streak = 0;
   }
+  const voteCounts = new Array(q.answers.length).fill(0);
+  for (const entry of game.answerMap.values()) {
+    if (entry.index >= 0 && entry.index < voteCounts.length) {
+      voteCounts[entry.index]++;
+    }
+  }
   const payload = {
     type: "answerReveal",
     correctIndex: q.correct,
     leaderboard: buildLeaderboard(),
     isLast: game.questionIndex >= questions.length - 1,
+    voteCounts,
+    photo: q.photo || null,
   };
   send(game.hostWs, payload);
   broadcast(payload);
