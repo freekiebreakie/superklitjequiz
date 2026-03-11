@@ -107,6 +107,36 @@ function spawnFish() {
 setInterval(spawnFish, 2500);
 spawnFish();
 
+// ── Gezicht sneeuwstorm ───────────────────────────────────────────────────
+function gezichtSneeuwstorm(count = 20) {
+  for (let i = 0; i < count; i++) {
+    setTimeout(() => {
+      const el = document.createElement("img");
+      el.src = "gezicht.jpeg";
+      el.className = "gezicht-flake";
+      const size = 45 + Math.random() * 70;
+      const dur = 1.8 + Math.random() * 2;
+      const dx = (Math.random() - 0.5) * 160;
+      const rot = (Math.random() - 0.5) * 900;
+      const scale = 0.7 + Math.random() * 0.8;
+      el.style.width = size + "px";
+      el.style.height = size + "px";
+      el.style.left = (Math.random() * window.innerWidth) + "px";
+      el.style.top = (-size - 10) + "px";
+      el.style.opacity = "0";
+      document.body.appendChild(el);
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        el.style.transition = `top ${dur}s linear, transform ${dur}s linear, opacity 0.25s`;
+        el.style.top = (window.innerHeight + size + 20) + "px";
+        el.style.transform = `translateX(${dx}px) rotate(${rot}deg) scale(${scale})`;
+        el.style.opacity = "1";
+      }));
+      setTimeout(() => { el.style.opacity = "0"; }, (dur - 0.3) * 1000);
+      setTimeout(() => el.remove(), dur * 1000 + 300);
+    }, i * 80);
+  }
+}
+
 // ── Bamischijf ────────────────────────────────────────────────────────────
 function launchBamischijven(count = 3) {
   for (let i = 0; i < count; i++) {
@@ -244,6 +274,7 @@ function handleMessage(msg) {
 
     case "answerReveal": {
       launchBamischijven(3);
+      gezichtSneeuwstorm(20);
       if (!hasAnswered) {
         // Timed out — show sad feedback
         const box = document.getElementById("answer-feedback-box");
