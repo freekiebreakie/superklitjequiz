@@ -123,6 +123,7 @@ function launchBamischijven(count = 3) {
       const dur = 1.4 + Math.random() * 0.8;
       el.style.left = startX + "px";
       el.style.top = startY + "px";
+      el.style.setProperty("--bami-dx", dx + "px");
       el.style.setProperty("--bami-dy", dy + "px");
       el.style.setProperty("--bami-rot", rot + "deg");
       el.style.animationDuration = dur + "s";
