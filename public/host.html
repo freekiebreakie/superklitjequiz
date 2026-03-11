@@ -68,11 +68,33 @@
                   border:6px solid var(--cyan);box-shadow:0 0 60px rgba(0,245,255,0.5),0 0 120px rgba(255,45,155,0.3);
                   animation:logoPulse 3s ease-in-out infinite;">
       <p class="logo-sub" style="letter-spacing:6px;">DE VRIJGEZELLEN QUIZ</p>
-      <div>
-        <button class="btn btn-host" onclick="createGame()" style="min-width:280px;">
+      <div style="display:flex;flex-direction:column;gap:14px;width:100%;max-width:320px;">
+        <button class="btn btn-host" onclick="createGame()">
           NIEUW SPEL STARTEN 🎣
         </button>
+        <button class="btn" onclick="openPreview()"
+                style="background:rgba(255,255,255,0.08);border:1px solid rgba(0,245,255,0.3);
+                       color:var(--cyan);font-size:18px;padding:14px 24px;">
+          VRAGEN BEKIJKEN 📋
+        </button>
       </div>
+    </div>
+
+    <!-- PREVIEW SCREEN -->
+    <div id="hscreen-preview" class="host-screen" style="min-height:100vh;justify-content:flex-start;padding:30px 20px;">
+      <div style="display:flex;align-items:center;gap:16px;width:100%;max-width:900px;position:sticky;top:0;z-index:20;
+                  background:rgba(7,13,26,0.95);backdrop-filter:blur(12px);padding:14px 0 10px;">
+        <button onclick="showScreen('hscreen-welcome')"
+                style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);
+                       border-radius:50px;color:#fff;font-family:'Fredoka One',cursive;font-size:16px;
+                       padding:10px 20px;cursor:pointer;white-space:nowrap;">
+          ← Terug
+        </button>
+        <div style="font-family:'Fredoka One',cursive;font-size:22px;color:var(--cyan);">
+          Alle vragen (<span id="preview-count"></span>)
+        </div>
+      </div>
+      <div id="preview-list" style="width:100%;max-width:900px;display:flex;flex-direction:column;gap:20px;margin-top:10px;"></div>
     </div>
 
     <!-- LOBBY SCREEN -->

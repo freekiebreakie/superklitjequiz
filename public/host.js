@@ -142,6 +142,52 @@ function sendMsg(obj) {
   if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify(obj));
 }
 
+// ── Preview ───────────────────────────────────────────────────────────────
+async function openPreview() {
+  const list = document.getElementById("preview-list");
+  list.innerHTML = `<div style="text-align:center;color:var(--cyan);font-family:'Fredoka One',cursive;font-size:20px;">Laden…</div>`;
+  showScreen("hscreen-preview");
+
+  const questions = await fetch("/api/questions").then((r) => r.json());
+  document.getElementById("preview-count").textContent = questions.length;
+
+  const letters = ["A", "B", "C", "D"];
+  const ansColors = ["#c0392b", "#1565c0", "#b7950b", "#1a7a4a"];
+  const ansColorsBright = ["#e83030", "#1a9fff", "#f0c40b", "#2dcb75"];
+
+  list.innerHTML = questions.map((q, qi) => {
+    const answersHtml = q.answers.map((ans, ai) => {
+      const isCorrect = ai === q.correct;
+      return `
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;
+                    background:${isCorrect ? "rgba(0,255,136,0.15)" : `linear-gradient(135deg,${ansColors[ai]}55,${ansColorsBright[ai]}33)`};
+                    border:1.5px solid ${isCorrect ? "var(--green)" : "rgba(255,255,255,0.1)"};
+                    font-family:'Fredoka One',cursive;font-size:15px;line-height:1.3;">
+          <span style="flex-shrink:0;font-size:1.2em;">${ANSWER_FISH[ai]}</span>
+          <span style="flex-shrink:0;opacity:0.8;">${letters[ai]}.</span>
+          <span style="flex:1;">${escHtml(ans)}</span>
+          ${isCorrect ? `<span style="flex-shrink:0;font-size:1.3em;">✅</span>` : ""}
+        </div>`;
+    }).join("");
+
+    return `
+      <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(0,245,255,0.12);
+                  border-radius:18px;padding:18px 20px;display:flex;gap:16px;align-items:flex-start;">
+        ${q.photo
+          ? `<img src="${q.photo}" style="width:80px;height:80px;object-fit:cover;border-radius:12px;
+                                          border:2px solid rgba(0,245,255,0.3);flex-shrink:0;">`
+          : ""}
+        <div style="flex:1;min-width:0;">
+          <div style="font-family:'Fredoka One',cursive;font-size:13px;color:var(--cyan);
+                      opacity:0.7;margin-bottom:6px;letter-spacing:1px;">VRAAG ${qi + 1}</div>
+          <div style="font-family:'Fredoka One',cursive;font-size:17px;color:#fff;
+                      line-height:1.35;margin-bottom:12px;">${escHtml(q.question)}</div>
+          <div style="display:flex;flex-direction:column;gap:6px;">${answersHtml}</div>
+        </div>
+      </div>`;
+  }).join("");
+}
+
 // ── Game actions ──────────────────────────────────────────────────────────
 function createGame() {
   if (actx && actx.state === "suspended") actx.resume();

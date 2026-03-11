@@ -229,6 +229,7 @@ setInterval(() => {
   });
 }, 30000);
 
+app.get("/api/questions", (req, res) => res.json(questions));
 app.use(express.static(path.join(__dirname, "public")));
 app.get("/host", (req, res) => res.sendFile(path.join(__dirname, "public", "host.html")));
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
