@@ -107,6 +107,31 @@ function spawnFish() {
 setInterval(spawnFish, 2500);
 spawnFish();
 
+// ── Bamischijf ────────────────────────────────────────────────────────────
+function launchBamischijven(count = 3) {
+  for (let i = 0; i < count; i++) {
+    setTimeout(() => {
+      const el = document.createElement("img");
+      el.src = "bamischijf.jpg";
+      el.className = "bamischijf";
+      const fromRight = Math.random() > 0.5;
+      const startX = fromRight ? window.innerWidth + 40 : -120;
+      const startY = 80 + Math.random() * (window.innerHeight - 200);
+      const dx = fromRight ? -(window.innerWidth + 200) : (window.innerWidth + 200);
+      const dy = (Math.random() - 0.5) * 300;
+      const rot = (Math.random() - 0.5) * 720;
+      const dur = 1.4 + Math.random() * 0.8;
+      el.style.left = startX + "px";
+      el.style.top = startY + "px";
+      el.style.setProperty("--bami-dy", dy + "px");
+      el.style.setProperty("--bami-rot", rot + "deg");
+      el.style.animationDuration = dur + "s";
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), dur * 1000 + 100);
+    }, i * 200);
+  }
+}
+
 // ── Fish explosion ────────────────────────────────────────────────────────
 function fishExplosion(x, y) {
   for (let i = 0; i < 14; i++) {
@@ -217,6 +242,7 @@ function handleMessage(msg) {
     }
 
     case "answerReveal": {
+      launchBamischijven(3);
       if (!hasAnswered) {
         // Timed out — show sad feedback
         const box = document.getElementById("answer-feedback-box");

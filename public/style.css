@@ -540,6 +540,25 @@ input::placeholder { color: rgba(255,255,255,0.3); letter-spacing: 1px; }
   text-shadow: 0 0 30px rgba(255,230,0,0.5);
 }
 
+/* ── Bamischijf ──────────────────────────────────────────────────────── */
+.bamischijf {
+  position: fixed;
+  pointer-events: none;
+  z-index: 998;
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  border-radius: 50%;
+  animation: bamifly linear forwards;
+  filter: drop-shadow(0 0 10px rgba(255,200,0,0.7));
+}
+@keyframes bamifly {
+  0%   { opacity: 0; transform: translateY(0) rotate(0deg) scale(0.6); }
+  8%   { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { opacity: 0; transform: translateY(var(--bami-dy)) rotate(var(--bami-rot)) scale(1.1); }
+}
+
 /* ── Fish explosion particles ────────────────────────────────────────── */
 .particle {
   position: fixed;

@@ -260,7 +260,7 @@
     "photo": "foto/photo12.jpg"
   },
   {
-    "question": "WAAR OF NIET WAAR: Cas heeft ooit een professionele viswedstrijd gewonnen tijdens een visvakantie in Frankrijk",
+    "question": "WAAR OF NIET WAAR: Cas heeft ooit een professionele viswedstrijd gewonnen",
     "answers": ["Waar", "Niet waar"],
     "correct": 1,
     "photo": "foto/photo15.jpg"

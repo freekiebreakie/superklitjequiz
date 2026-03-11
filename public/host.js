@@ -104,6 +104,31 @@ function spawnFish() {
 setInterval(spawnFish, 2000);
 spawnFish();
 
+// ── Bamischijf ────────────────────────────────────────────────────────────
+function launchBamischijven(count = 5) {
+  for (let i = 0; i < count; i++) {
+    setTimeout(() => {
+      const el = document.createElement("img");
+      el.src = "bamischijf.jpg";
+      el.className = "bamischijf";
+      const fromRight = Math.random() > 0.5;
+      const startX = fromRight ? window.innerWidth + 40 : -120;
+      const startY = 80 + Math.random() * (window.innerHeight - 200);
+      const dx = fromRight ? -(window.innerWidth + 200) : (window.innerWidth + 200);
+      const dy = (Math.random() - 0.5) * 300;
+      const rot = (Math.random() - 0.5) * 720;
+      const dur = 1.4 + Math.random() * 0.8;
+      el.style.left = startX + "px";
+      el.style.top = startY + "px";
+      el.style.setProperty("--bami-dy", dy + "px");
+      el.style.setProperty("--bami-rot", rot + "deg");
+      el.style.animationDuration = dur + "s";
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), dur * 1000 + 100);
+    }, i * 180);
+  }
+}
+
 // ── Fish explosion ────────────────────────────────────────────────────────
 function fishExplosion(x, y, count = 20) {
   for (let i = 0; i < count; i++) {
@@ -366,6 +391,7 @@ function handleMessage(msg) {
       nextBtn.textContent = msg.isLast ? "EINDSTAND 🏆" : "VOLGENDE VRAAG ➡️";
 
       fishExplosion(window.innerWidth / 2, window.innerHeight * 0.35, 24);
+      launchBamischijven(5);
       playJingle();
 
       setTimeout(() => showScreen("hscreen-reveal"), 600);
