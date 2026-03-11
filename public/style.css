@@ -547,14 +547,7 @@ input::placeholder { color: rgba(255,255,255,0.3); letter-spacing: 1px; }
   z-index: 997;
   border-radius: 50%;
   object-fit: cover;
-  animation: gezichtval linear forwards;
   filter: drop-shadow(0 0 6px rgba(255,45,155,0.5));
-}
-@keyframes gezichtval {
-  0%   { opacity: 0; transform: translateX(0) rotate(0deg) scale(0.5); }
-  10%  { opacity: 1; }
-  88%  { opacity: 1; }
-  100% { opacity: 0; transform: translateX(var(--gz-dx)) rotate(var(--gz-rot)) scale(var(--gz-scale)); }
 }
 
 /* ── Bamischijf ──────────────────────────────────────────────────────── */
