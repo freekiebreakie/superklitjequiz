@@ -298,15 +298,17 @@ function handleMessage(msg) {
         const pct = Math.round((votes / maxVotes) * 100);
         const votePct = totalVotes > 0 ? Math.round((votes / totalVotes) * 100) : 0;
         return `
-          <div class="host-answer-card ${classes[i]} ${i === correctIdx ? "correct" : "wrong"}" style="flex-direction:column;align-items:stretch;gap:6px;">
-            <div style="display:flex;align-items:center;gap:8px;">
-              <span style="font-size:1.4em;">${ANSWER_FISH[i]}</span>
-              <span style="font-size:1.1em;opacity:0.9;">${letters[i]}.</span>
-              <span style="flex:1;">${escHtml(ans)}</span>
-              <span style="font-family:'Fredoka One',cursive;font-size:1.1em;white-space:nowrap;">${votes} stem${votes !== 1 ? "men" : ""} (${votePct}%)</span>
+          <div class="host-answer-card ${classes[i]} ${i === correctIdx ? "correct" : "wrong"}" style="flex-direction:column;align-items:stretch;gap:8px;">
+            <div style="display:flex;align-items:center;gap:8px;min-width:0;">
+              <span style="font-size:1.3em;flex-shrink:0;">${ANSWER_FISH[i]}</span>
+              <span style="opacity:0.9;flex-shrink:0;">${letters[i]}.</span>
+              <span style="overflow-wrap:break-word;word-break:normal;min-width:0;flex:1;">${escHtml(ans)}</span>
             </div>
-            <div style="background:rgba(0,0,0,0.3);border-radius:6px;height:10px;overflow:hidden;">
-              <div style="height:100%;border-radius:6px;width:${pct}%;background:${i === correctIdx ? "var(--green)" : "rgba(255,255,255,0.4)"};transition:width 0.6s ease;"></div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="flex:1;background:rgba(0,0,0,0.3);border-radius:6px;height:10px;overflow:hidden;">
+                <div style="height:100%;border-radius:6px;width:${pct}%;background:${i === correctIdx ? "var(--green)" : "rgba(255,255,255,0.4)"};transition:width 0.6s ease;"></div>
+              </div>
+              <span style="font-family:'Fredoka One',cursive;font-size:0.9em;white-space:nowrap;flex-shrink:0;">${votes} (${votePct}%)</span>
             </div>
           </div>
         `;

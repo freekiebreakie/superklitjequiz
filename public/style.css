@@ -592,17 +592,19 @@ input::placeholder { color: rgba(255,255,255,0.3); letter-spacing: 1px; }
   width: 100%;
 }
 .host-answer-card {
-  padding: 20px;
+  padding: 16px 20px;
   border-radius: 18px;
   font-family: 'Fredoka One', cursive;
-  font-size: clamp(18px, 2vw, 26px);
+  font-size: clamp(16px, 1.8vw, 24px);
   color: #fff;
   display: flex;
   align-items: center;
   gap: 12px;
-  min-height: 80px;
-  line-height: 1.2;
-  word-break: break-word;
+  min-height: 72px;
+  line-height: 1.25;
+  overflow-wrap: break-word;
+  word-break: normal;
+  min-width: 0;
 }
 .host-answer-card.a { background: linear-gradient(135deg, #c0392b, var(--ans-a)); }
 .host-answer-card.b { background: linear-gradient(135deg, #1565c0, var(--ans-b)); }
