@@ -320,6 +320,15 @@ function renderQuestion(msg) {
   const letters = ["A", "B", "C", "D"];
   const classes = ["a", "b", "c", "d"];
 
+  // Question photo
+  const qPhoto = document.getElementById("question-photo");
+  if (msg.photo) {
+    qPhoto.src = msg.photo;
+    qPhoto.style.display = "block";
+  } else {
+    qPhoto.style.display = "none";
+  }
+
   // Question text
   const qText = document.getElementById("player-question-text");
   if (msg.question) {
