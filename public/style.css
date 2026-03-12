@@ -668,7 +668,7 @@ input::placeholder { color: rgba(255,255,255,0.3); letter-spacing: 1px; }
 }
 
 /* ── Mobile tweaks ───────────────────────────────────────────────────── */
-@media (max-width: 520px) {
+@media (max-width: 640px) {
   .card { padding: 20px; }
 
   /* 1-column answers on mobile so long text fits */
