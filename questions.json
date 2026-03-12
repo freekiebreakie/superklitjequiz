@@ -236,6 +236,36 @@
     "photo": "foto/photo19.jpg"
   },
   {
+    "question": "Wat is de hoogste snelheid die Cas ooit heeft gereden op de Waalbrug in Nijmegen?",
+    "answers": ["140 km/u", "175 km/u", "210 km/u", "260 km/u"],
+    "correct": 2,
+    "photo": "foto/photo09.jpg"
+  },
+  {
+    "question": "Wat deed Cas tijdens de bevalling om te helpen?",
+    "answers": ["Hij zocht alles op via Google", "Hij legde elke stap voor aan ChatGPT en volgde de tips op", "Hij belde zijn moeder voor advies", "Hij keek YouTube tutorials"],
+    "correct": 1,
+    "photo": "foto/photo03.jpg"
+  },
+  {
+    "question": "Wat geeft Cas Meral in ruil voor het roken van een jointje?",
+    "answers": ["Een etentje", "Een massage", "Hij doet de afwas", "Een cadeautje"],
+    "correct": 1,
+    "photo": "foto/photo04.jpg"
+  },
+  {
+    "question": "Hoeveel kilo is Cas aangekomen tijdens het zwangerschapsverlof?",
+    "answers": ["4 kg", "6 kg", "9 kg", "12 kg"],
+    "correct": 2,
+    "photo": "foto/photo05.jpg"
+  },
+  {
+    "question": "Hoeveel kilo is Cas afgevallen met zijn dieet in 3 weken tijd?",
+    "answers": ["1.5 kg", "3.7 kg", "5 kg", "7 kg"],
+    "correct": 1,
+    "photo": "foto/photo13.jpg"
+  },
+  {
     "question": "WAAR OF NIET WAAR: Cas rookte zoveel jonkos dat zijn buren het door de muren heen roken",
     "answers": ["Waar", "Niet waar"],
     "correct": 0,
@@ -282,35 +312,5 @@
     "answers": ["Waar", "Niet waar"],
     "correct": 0,
     "photo": "foto/photo11.jpg"
-  },
-  {
-    "question": "Wat is de hoogste snelheid die Cas ooit heeft gereden op de Waalbrug in Nijmegen?",
-    "answers": ["140 km/u", "175 km/u", "210 km/u", "260 km/u"],
-    "correct": 2,
-    "photo": "foto/photo09.jpg"
-  },
-  {
-    "question": "Wat deed Cas tijdens de bevalling om te helpen?",
-    "answers": ["Hij googelde alles op", "Hij legde elke stap voor aan ChatGPT en volgde de tips op", "Hij belde zijn moeder voor advies", "Hij keek YouTube tutorials"],
-    "correct": 1,
-    "photo": "foto/photo03.jpg"
-  },
-  {
-    "question": "Wat geeft Cas Meral in ruil voor het roken van een jointje?",
-    "answers": ["Een etentje", "Een massage", "Hij doet de afwas", "Een cadeautje"],
-    "correct": 1,
-    "photo": "foto/photo04.jpg"
-  },
-  {
-    "question": "Hoeveel kilo is Cas aangekomen tijdens het zwangerschapsverlof?",
-    "answers": ["4 kg", "6 kg", "9 kg", "12 kg"],
-    "correct": 2,
-    "photo": "foto/photo05.jpg"
-  },
-  {
-    "question": "Hoeveel kilo is Cas afgevallen met zijn dieet in 3 weken tijd?",
-    "answers": ["1.5 kg", "3.7 kg", "5 kg", "7 kg"],
-    "correct": 1,
-    "photo": "foto/photo13.jpg"
   }
 ]
